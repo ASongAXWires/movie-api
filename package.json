@@ -4,6 +4,7 @@
   "description": "In the initial commit to this project, you have been provided with a CSV file that contains data on the American Film Institute's (AFI) Top 100 Movies. Your task is to create a database backed Express API for access the details of these films.",
   "main": ".eslintrc.js",
   "scripts": {
+    "dev": "./node_modules/.bin/nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
