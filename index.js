@@ -1,22 +1,53 @@
 var express = require('express')
 var movies = require('./movies.json')
-const bodyParser = require('body-parser')
+var bodyParser = require('body-parser')
+var models = require('./models')
 
 var app = express()
 
 app.get('/movies', (request, response) => {
-    response.send(movies)
+    models.movies.findAll({ include: { model: models.movies } }).then((movies) => {
+        response.send(movies)
+    })
 })
 
 app.get('/movies/:identifier', (request, response) => {
-    var matchingMovies = movies.filter((item) => {
-        return item.identifier === request.params.identifier
+    models.movies.findOne({
+        where: { identifier: request.params.identifier },
+        include: { model: models.movies }
+    }).then((matchingMovies) => {
+        if (matchingMovies) {
+            response.send(matchingMovies)
+        } else {
+            response.sendStatus(404)
+        }
     })
-    if (matchingMovies.length) {
-        response.send(matchingMovies)
-    } else {
-        response.sendStatus(404)
-    }
+})
+
+app.get('/directors/:identifier', (request, response) => {
+    models.movies.findOne({
+        where: { identifier: request.params.identifier },
+        include: { model: models.movies }
+    }).then((directors) => {
+        if (directors) {
+            response.send(directors)
+        } else {
+            response.sendStatus(404)
+        }
+    })
+})
+
+app.get('/genres/:identifier', (request, response) => {
+    models.movies.findOne({
+        where: { identifier: request.params.identifier },
+        include: { model: models.movies }
+    }).then((genres) => {
+        if (genres) {
+            response.send(genres)
+        } else {
+            response.sendStatus(404)
+        }
+    })
 })
 
 app.post('/movies', bodyParser.json(), (request, response) => {
@@ -26,7 +57,9 @@ app.post('/movies', bodyParser.json(), (request, response) => {
         response.status(400).send('The following attributes are required: title, directors, releasedate, rating, runtime, genres')
     }
 
-    const newMovie = { title, directors, releasedate, rating, runtime, genres }
+    // models.movies.findOne({ where: 
+    // })
+    //const newMovie = { title, directors, releasedate, rating, runtime, genres }
 
     movies.push(newMovie)
     response.status(201).send(newMovie)
