@@ -1,5 +1,5 @@
 const moviesDirectors = (connection, Sequelize, movies, directors) => {
-    return connection.define('movies_directors', {
+    return connection.define('moviesDirectors', {
         movieId: {
             type: Sequelize.INTEGER,
             reference: {
